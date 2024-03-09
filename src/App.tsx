@@ -1,54 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import * as S from './styles';
+import axios from 'axios';
 
 function App() {
+  const [data, setData] = useState<any>([]);
 
-  const dataPost = [
-    {
-      id: 1,
-      title: 'Nest',
-      content: 'Nest content here',
-      published: true,
-      author: { name: 'Lucas' },
-      authorId: 1
-    },
-    {
-      id: 2,
-      title: 'Ajax',
-      content: 'Content ajax here',
-      published: true,
-      author: { name: 'Andrey' },
-      authorId: 2
-    },
-    {
-      id: 3,
-      title: 'Prisma',
-      content: 'Prisma content here',
-      published: true,
-      author: { name: 'Andrey' },
-      authorId: 2
-    },
-    {
-      id: 4,
-      title: 'React',
-      content: 'React content here',
-      published: true,
-      author: { name: 'Andrey' },
-      authorId: 2
-    }
-  ]
+  useEffect(() => {
+    axios.get('http://localhost:3000/feed')
+      .then(response => {
+        console.log(response)
+        setData(response.data);
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+      });
+  }, []);
 
   return (
     <S.Container>
       <S.PostSection>
         {
-          dataPost.map((ref) =>
-          <S.Post>
-            <h3>{ref.title}</h3>
-            <p>{ref.content}</p>
-            <h6>{ref.author.name}</h6>
-          </S.Post>)
+          data && data.map((ref: any) =>
+            <S.Post>
+              <h3>{ref.title}</h3>
+              <p>{ref.content}</p>
+            </S.Post>)
         }
       </S.PostSection>
     </S.Container>
